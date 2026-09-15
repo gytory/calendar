@@ -1,43 +1,69 @@
-import datetime
+import sys
+from functions import (
+    load_tasks, save_tasks, add_task, find_tasks,
+    filter_by_priority, sort_tasks_by_date, show_tasks,
+    input_date, input_time,
+)
+
+sys.stdout.reconfigure(encoding="utf-8")
+
+DATA_FILE = "data/tasks.json"
+
+
+def menu_add(tasks):
+    name = input("Введите название события: ")
+    event_date = input_date()
+    event_time = input_time()
+    priority = input("Введите приоритет (Высокий/Средний/Низкий): ")
+    add_task(tasks, name, event_date, event_time, priority)
+    save_tasks(DATA_FILE, tasks)
+    print("Событие создано и сохранено.")
+
+
+def menu_find(tasks):
+    query = input("Введите часть названия: ")
+    show_tasks(find_tasks(tasks, query))
+
+
+def menu_filter(tasks):
+    priority = input("Введите приоритет: ")
+    show_tasks(filter_by_priority(tasks, priority))
+
+
+def menu_sort(tasks):
+    show_tasks(sort_tasks_by_date(tasks))
+
 
 def main():
-    print("Приложение личный календарь")
+    print("Ваш личный календарь")
+    tasks = load_tasks(DATA_FILE)
 
-    print('Создание событие начинается с выбора даты. Поочередно введите число, месяц и год.')
-    name = input("Введите название события: ")
+    while True:
+        print("\n1. Добавить задачу")
+        print("2. Показать все задачи")
+        print("3. Найти задачу по названию")
+        print("4. Фильтр по приоритету")
+        print("5. Сортировать по дате")
+        print("0. Выход")
+        choice = input("Выберите действие: ")
 
-    
-    day = int(input("Введите день (число): "))
-    month = int(input("Введите месяц (число): "))
-    year = int(input("Введите год (число): "))
-    
-    hours = int(input("Введите час начала (0-23): "))
-    minutes = int(input("Введите минуты начала (0-59): "))
-    
-    priority = input("Введите приоритет (Высокий/Средний/Низкий): ")
-    
-    if year < 2000:
-        print("Предупреждение: Вы ввели год ранее 2000.")
-    
-    if hours < 0 or hours > 23 or minutes < 0 or minutes > 59:
-        print("Введено некорректное время!")
-        return
-    
-    try:
-        event_date = datetime.date(year, month, day)
-        formatted_date = event_date.strftime("%d.%m.%Y")
-    except ValueError:
-        print("ОШИБКА: Введена несуществующая дата!")
-        return
-    
-    event_time = datetime.time(hours, minutes)
-    formatted_time = event_time.strftime("%H:%M")
-    
-    print("Событие создано")
-    print(f"Название:    {name}")
-    print(f"Дата:        {formatted_date}")
-    print(f"Время:       {formatted_time}")
-    print(f"Приоритет:   {priority.capitalize()}")
+        if choice == "1":
+            menu_add(tasks)
+        elif choice == "2":
+            show_tasks(tasks)
+        elif choice == "3":
+            menu_find(tasks)
+        elif choice == "4":
+            menu_filter(tasks)
+        elif choice == "5":
+            menu_sort(tasks)
+        elif choice == "0":
+            save_tasks(DATA_FILE, tasks)
+            print("Данные сохранены. Выход.")
+            break
+        else:
+            print("Неверный выбор.")
+
 
 if __name__ == "__main__":
     main()
