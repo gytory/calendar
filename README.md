@@ -43,11 +43,16 @@
 
 ## Структура проетка
 
-- `main.py` — точка запуска, меню, вызов функций;
-- `functions.py` — все функции проекта;
-- `data/tasks.json` — файл с данными;
-- `tests/test_functions.py` — тесты;
-- `requirements.txt` — зависимости
+## Структура проекта
+- `main.py` — точка запуска, меню;
+- `storage.py` — загрузка и сохранение JSON;
+- `utils.py` — вспомогательные функции ввода;
+- `models/` — пакет классов:
+  - `events.py` — Event и функции работы с событиями;
+  - `users.py` — User и функции работы с пользователями;
+  - `priorities.py` — Priority и функции работы с приоритетами;
+- `data/` — JSON-файлы;
+- `tests/` — автоматизированные тесты.
 
 ---
 
@@ -62,7 +67,7 @@ pip install -r requirements.txt
 ## Запуск программы
 python main.py
 ## Запуск тестов
-python -m pytest tests/test_functions.py -v
+python -m pytest tests/ -v
 ## Проверка качества кода
 python -m flake8
 ---
